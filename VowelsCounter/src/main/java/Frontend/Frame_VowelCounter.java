@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -39,7 +41,7 @@ public class Frame_VowelCounter extends javax.swing.JFrame {
         manejadorInterfaz = new ManejadorInterfaz();
         txtArea_input.setLineWrap(true);
         manejadorInterfaz.setEventoPosicion(txtArea_input, txt_numeroLinea, txt_numeroColumna);
-        
+        activarDesactivarBoton();
     }
 
     /**
@@ -87,6 +89,13 @@ public class Frame_VowelCounter extends javax.swing.JFrame {
         txtArea_input.setAutoscrolls(false);
         txtArea_input.setMargin(new java.awt.Insets(4, 4, 4, 4));
         txtArea_input.setSelectionColor(new java.awt.Color(153, 204, 255));
+        txtArea_input.addInputMethodListener(new java.awt.event.InputMethodListener() {
+            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
+            }
+            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
+                txtArea_inputInputMethodTextChanged(evt);
+            }
+        });
         scrollPane_TextArea.setViewportView(txtArea_input);
 
         jLabel1.setFont(new java.awt.Font("Tw Cen MT", 1, 24)); // NOI18N
@@ -136,6 +145,7 @@ public class Frame_VowelCounter extends javax.swing.JFrame {
 
         btn_Calcular.setBackground(new java.awt.Color(255, 204, 102));
         btn_Calcular.setText("Calcular");
+        btn_Calcular.setEnabled(false);
         btn_Calcular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_CalcularActionPerformed(evt);
@@ -424,6 +434,14 @@ public class Frame_VowelCounter extends javax.swing.JFrame {
                 table_detalleResultados_Vocales, table_detalleResultados_Enteros, table_detalleErrores);
     }//GEN-LAST:event_btn_CalcularActionPerformed
 
+    private void txtArea_inputInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtArea_inputInputMethodTextChanged
+        if(!txtArea_input.getText().isEmpty() || !txtArea_input.getText().isBlank()){
+            btn_Calcular.setEnabled(true);
+        }else{
+            btn_Calcular.setEnabled(false);
+        }
+    }//GEN-LAST:event_txtArea_inputInputMethodTextChanged
+
     /**
      * @param args the command line arguments
      */
@@ -473,6 +491,29 @@ public class Frame_VowelCounter extends javax.swing.JFrame {
            System.err.println("Imposible cargar interfaz, se usará la interfaz por defecto de Java.\nError: "+e);
         }         
     }    
+      
+      private void activarDesactivarBoton(){
+            txtArea_input.getDocument().addDocumentListener(new DocumentListener() {
+  
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updated();
+            }            
+            @Override
+             public void removeUpdate(DocumentEvent e) {
+                updated();
+            }
+            @Override
+             public void insertUpdate(DocumentEvent e) {
+                updated();
+            }
+
+            public void updated() {
+                btn_Calcular.setEnabled(!txtArea_input.getText().isEmpty() ||  !txtArea_input.getText().isBlank());
+            }
+            });
+
+      }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel JPn_datoPosicion;
